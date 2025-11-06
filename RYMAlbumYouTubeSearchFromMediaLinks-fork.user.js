@@ -1,15 +1,15 @@
 // ==UserScript==
 // @name         RYMAlbumYouTubeSearchFromMediaLinks-fork
+// @description  Creates link to search YouTube for a release at the end of existing RYM media links
 // @author       dougwritescode, smartacephale
 // @supportURL   https://github.com/smartacephale/greasy-fork-scripts
-// @description  Creates link to search YouTube for a release at the end of existing RYM media links
 // @version      4.0.0
 // @include      https://*rateyourmusic.com/release/*
-// @icon         https://www.google.com/s2/favicons?sz=64&domain=rateyourmusic.com
 // @namespace    dougwritescode
 // @license	     MIT
 // @grant        GM_addStyle
 // @run-at       document-idle
+// @icon         https://www.google.com/s2/favicons?sz=64&domain=rateyourmusic.com
 // @downloadURL https://update.greasyfork.org/scripts/488359/RYMAlbumYouTubeSearchFromMediaLinks.user.js
 // @updateURL https://update.greasyfork.org/scripts/488359/RYMAlbumYouTubeSearchFromMediaLinks.meta.js
 // ==/UserScript==
