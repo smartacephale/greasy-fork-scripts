@@ -3,7 +3,7 @@
 // @namespace   Violentmonkey Scripts
 // @match       https://mail.proton.me/u/0/views/newsletters*
 // @grant       none
-// @version     1.0
+// @version     1.1
 // @author      -
 // @run-at      document-idle
 // @description Unsubscribe from all Newsletters in Proton.me
@@ -11,9 +11,9 @@
 
 async function genocideNewsletters() {
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+  
     while (true) {
-        // 1. Find the first unsubscribe button where text matches exactly 'Unsubscribe'
+        // 1. Find the first unsubscribe button with exact text match
         const unsubButton = Array.from(document.querySelectorAll('button'))
             .find(btn => btn.textContent.trim() === 'Unsubscribe' && btn.offsetParent !== null);
 
@@ -22,12 +22,11 @@ async function genocideNewsletters() {
             break;
         }
 
-        // Click it and wait for the popup
         unsubButton.click();
         console.log("Unsubscribe clicked, waiting for popup...");
         await delay(1000);
 
-        // 2. Select 'Trash existing' option in the popup
+        // 2. Select 'Trash existing' option
         const trashOption = Array.from(document.querySelectorAll('label, span'))
             .find(el => el.textContent.includes('Trash existing') || el.textContent.includes('Move to Trash'));
 
@@ -36,21 +35,25 @@ async function genocideNewsletters() {
             console.log("Selected 'Trash existing'.");
         }
 
-        // 3. Select specific button by data-testid and click it
-        const finalConfirmBtn = document.querySelector('button[data-testid="unsubscribe-button"]');
+        // 3. Find confirmation button with retry logic
+        let finalConfirmBtn = document.querySelector('button[data-testid="unsubscribe-button"]');
 
+        if (!finalConfirmBtn) {
+            console.log("Button not found. Waiting an extra second...");
+            await delay(1000);
+            finalConfirmBtn = document.querySelector('button[data-testid="unsubscribe-button"]');
+        }
+
+        // 4. Final Click and Cooldown
         if (finalConfirmBtn) {
             finalConfirmBtn.click();
             console.log("Final confirmation clicked.");
+            await delay(1000); // Wait for the UI to clear the newsletter from the list
         } else {
-            console.log("Could not find the confirm button with data-testid.");
-            // Optional: Escape the loop or click a generic button if the ID fails
-            break;
+            console.log("Could not find the confirm button after waiting. Refreshing list...");
+            // If it gets stuck, we click elsewhere or just wait to avoid a loop
+            await delay(2000);
         }
-
-        // 4. Wait for 1 second before repeating
-        console.log("Cooldown: 1 second...");
-        await delay(1000);
     }
 }
 
